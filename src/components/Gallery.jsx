@@ -62,6 +62,18 @@ export default function Gallery() {
                     </div>
                 ))}
             </div>
+
+            <div className="mt-20 text-center">
+                <a
+                    href="https://www.behance.net/NaveenUXUI?tracking_source=userSearchProfilePanel&isProfilePanel=true"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-white/20 hover:border-accent hover:bg-accent/10 transition-colors duration-300 text-sm uppercase tracking-widest font-semibold hover-target"
+                >
+                    View More on Behance
+                    <span className="transition-transform group-hover:translate-x-1">→</span>
+                </a>
+            </div>
         </section>
     );
 }

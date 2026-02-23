@@ -9,6 +9,8 @@ export default function Hero() {
         const ctx = gsap.context(() => {
             const tl = gsap.timeline();
 
+            const statsEl = subtexRef.current?.nextElementSibling;
+
             tl.fromTo(headlineRef.current.children,
                 { y: 100, opacity: 0 },
                 { y: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: 'power4.out', delay: 0.2 }
@@ -18,6 +20,14 @@ export default function Hero() {
                     { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
                     "-=0.6"
                 );
+
+            if (statsEl) {
+                tl.fromTo(statsEl,
+                    { opacity: 0, x: -20 },
+                    { opacity: 1, x: 0, duration: 0.8, ease: 'power2.out' },
+                    "-=0.4"
+                );
+            }
         });
 
         return () => ctx.revert();
@@ -33,25 +43,36 @@ export default function Hero() {
                     className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tight text-foreground font-semibold"
                     ref={headlineRef}
                 >
-                    <div className="overflow-hidden"><span className="inline-block">I have expertise</span></div>
-                    <div className="overflow-hidden"><span className="inline-block text-white/50 italic">in combining</span></div>
-                    <div className="overflow-hidden"><span className="inline-block">users' needs</span></div>
+                    <div className="overflow-hidden"><span className="inline-block">Designing</span></div>
                     <div className="overflow-hidden flex items-center gap-4">
-                        <span className="inline-block">&amp; business goals</span>
+                        <span className="inline-block text-white/50 italic">Intuitive,</span>
+                        <span className="inline-block text-accent">Impactful</span>
                     </div>
-                    <div className="overflow-hidden"><span className="inline-block text-accent">for success.</span></div>
+                    <div className="overflow-hidden"><span className="inline-block">Experiences</span></div>
                 </h1>
 
                 <p
                     ref={subtexRef}
                     className="mt-8 text-lg md:text-xl text-foreground/60 max-w-2xl font-sans"
                 >
-                    A multi-disciplinary designer focused on crafting immersive digital experiences and intuitive interfaces for forward-thinking brands.
+                    Hey, I’m Naveen 👋<br />
+                    UI/UX Designer based in Chennai, India. A multi-disciplinary designer focused on crafting immersive digital experiences and intuitive interfaces for forward-thinking brands.
                 </p>
 
-                <div className="mt-12 flex gap-6">
-                    <a href="#projects" className="group flex items-center gap-2 hover-target text-sm uppercase tracking-widest font-semibold pb-1 border-b border-white/20 hover:border-accent transition-colors">
-                        View Work
+                <div className="mt-8 flex gap-8 items-center border-l-2 border-accent/50 pl-6 z-10 opacity-0 relative">
+                    <div>
+                        <span className="block text-3xl font-serif text-white font-bold">2+</span>
+                        <span className="text-sm text-white/50 uppercase tracking-widest mt-1 block">Years of Experience</span>
+                    </div>
+                    <div>
+                        <span className="block text-3xl font-serif text-white font-bold">20+</span>
+                        <span className="text-sm text-white/50 uppercase tracking-widest mt-1 block">Successful Projects</span>
+                    </div>
+                </div>
+
+                <div className="mt-12 flex gap-6 relative z-20">
+                    <a href="https://drive.google.com/file/d/1k00fZvp9Sbr_us6Kh71NNoW29WZhLPYM/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover-target text-sm uppercase tracking-widest font-semibold px-8 py-4 border border-white/20 hover:border-accent hover:bg-accent/10 transition-colors duration-300 rounded-full">
+                        View Resume
                         <span className="group-hover:translate-x-1 transition-transform">→</span>
                     </a>
                 </div>

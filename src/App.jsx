@@ -7,6 +7,7 @@ import Projects from './components/Projects';
 import Process from './components/Process';
 import Gallery from './components/Gallery';
 import Footer from './components/Footer';
+import Experience from './components/Experience';
 
 function App() {
   useEffect(() => {
@@ -41,6 +42,7 @@ function App() {
       <main>
         <Hero />
         <ExpertiseMarquee />
+        <Experience />
         <Projects />
         <Process />
         <Gallery />

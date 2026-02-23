@@ -7,19 +7,30 @@ gsap.registerPlugin(ScrollTrigger);
 const projects = [
     {
         id: 1,
-        title: "Onroad",
-        category: "Mobile Ecosystem",
-        description: "Engineering a Seamless Riding Ecosystem with intuitive user flows and a unified design system.",
-        color: "#9b5de5",
-        image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=2070&auto=format&fit=crop" // Abstract placeholder
+        title: "Budgie",
+        category: "HRMS Dashboard",
+        description: "Revolutionizing Dashboard Experience. A comprehensive HRMS software solution that goes beyond basic portals.",
+        color: "#3b82f6", // blue-ish
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop",
+        link: "https://naveen-pc.framer.ai/work/gatech-landingpage/budgie-dashboard"
     },
     {
         id: 2,
-        title: "Sibambo Studio",
-        category: "Brand Identity",
-        description: "Crafting a compelling digital presence and visual language for a modern creative studio.",
-        color: "#d4af37",
-        image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
+        title: "Ck's Bakery",
+        category: "Web App / QR Management",
+        description: "Scanning Their Way to Success. Streamlined the ordering process for improved customer experience and sales.",
+        color: "#f59e0b", // amber-ish
+        image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2072&auto=format&fit=crop",
+        link: "https://naveen-pc.framer.ai/work/gatech-landingpage/ck-bakery"
+    },
+    {
+        id: 3,
+        title: "Onroad",
+        category: "Mobile App Product",
+        description: "A seamless riding App. A taxi booking application offering convenient riding experiences.",
+        color: "#9b5de5", // purple-ish
+        image: "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?q=80&w=2070&auto=format&fit=crop",
+        link: "https://www.behance.net/gallery/186660637/ONROAD-UXUI-Case-study"
     }
 ];
 
@@ -80,10 +91,10 @@ export default function Projects() {
 
                                 <div className="max-h-0 opacity-0 group-hover:max-h-40 group-hover:opacity-100 transition-all duration-700 ease-expo-out overflow-hidden md:w-1/2">
                                     <p className="text-lg md:text-xl text-white/80 mb-8 font-sans">{project.description}</p>
-                                    <button className="flex items-center gap-3 text-white uppercase tracking-wider text-sm font-semibold hover-target pb-2 border-b border-white/30 hover:border-white transition-colors">
+                                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-3 text-white uppercase tracking-wider text-sm font-semibold hover-target pb-2 border-b border-white/30 hover:border-white transition-colors">
                                         Explore Case Study
                                         <span className="block w-2 h-2 rounded-full" style={{ backgroundColor: project.color }} />
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
