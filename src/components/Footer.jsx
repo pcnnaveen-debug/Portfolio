@@ -1,61 +1,30 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-gsap.registerPlugin(ScrollTrigger);
+import { motion } from 'framer-motion';
 
 export default function Footer() {
-    const containerRef = useRef(null);
-
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            gsap.fromTo('.footer-text',
-                { y: 100, opacity: 0 },
-                {
-                    y: 0,
-                    opacity: 1,
-                    stagger: 0.1,
-                    duration: 1.2,
-                    ease: 'power4.out',
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top 80%",
-                    }
-                }
-            );
-        }, containerRef);
-
-        return () => ctx.revert();
-    }, []);
-
     return (
-        <footer className="relative py-32 px-6 md:px-12 lg:px-24 bg-background border-t border-white/10 overflow-hidden" ref={containerRef}>
-            {/* Abstract Footer Graphic */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[800px] h-[800px] rounded-full bg-accent/5 blur-[120px] pointer-events-none" />
+        <footer className="py-12 bg-background border-t border-white/5">
+            <div className="container mx-auto px-6">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+                    {/* Logo */}
+                    <motion.div 
+                        className="text-3xl font-script text-primary"
+                        whileHover={{ scale: 1.05 }}
+                    >
+                        Janemon
+                    </motion.div>
 
-            <div className="max-w-5xl mx-auto flex flex-col items-center text-center relative z-10">
-                <h2 className="footer-text text-5xl md:text-8xl font-serif font-bold tracking-tight mb-8">
-                    Let's be in <span className="text-accent italic">touch!</span>
-                </h2>
+                    {/* Links */}
+                    <div className="flex gap-8 text-xs font-bold uppercase tracking-[0.2em] text-on-surface-variant">
+                        <a href="#" className="hover:text-primary transition-colors">Facebook</a>
+                        <a href="#" className="hover:text-primary transition-colors">Twitter</a>
+                        <a href="#" className="hover:text-primary transition-colors">Instagram</a>
+                        <a href="#" className="hover:text-primary transition-colors">Dribbble</a>
+                    </div>
 
-                <p className="footer-text text-lg text-white/50 max-w-xl font-sans mb-16 leading-relaxed">
-                    I'm always open to learning new approaches. If you have any ideas that might lead to an even better result, I'd love to hear them! I can then incorporate them into the process next time 😇.
-                </p>
-
-                <a
-                    href="mailto:pcnnaveen@gmail.com"
-                    className="footer-text inline-block hover-target px-12 py-5 rounded-full border border-white/20 hover:border-accent hover:bg-accent/10 transition-colors duration-500 uppercase tracking-widest text-sm font-semibold selection:bg-accent selection:text-white relative overflow-hidden group"
-                >
-                    <span className="relative z-10">pcnnaveen@gmail.com</span>
-                </a>
-            </div>
-
-            <div className="mt-32 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-sm text-white/30 font-sans footer-text relative z-10 w-full">
-                <div>&copy; {new Date().getFullYear()} Designed & Developed with Purpose.</div>
-                <div className="flex gap-6 mt-6 md:mt-0">
-                    <a href="#" className="hover:text-white transition-colors hover-target">Twitter</a>
-                    <a href="#" className="hover:text-white transition-colors hover-target">Dribbble</a>
-                    <a href="#" className="hover:text-white transition-colors hover-target">LinkedIn</a>
+                    {/* Copyright */}
+                    <div className="text-xs text-on-surface-variant/50 font-medium uppercase tracking-widest">
+                        &copy; {new Date().getFullYear()} Janemon. All Rights Reserved.
+                    </div>
                 </div>
             </div>
         </footer>

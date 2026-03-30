@@ -1,18 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Inter:wght@400;500;700&family=Caveat:wght@700&display=swap');
 
 @import "tailwindcss";
 
 @theme {
-  --color-background: #111111;
-  --color-foreground: #F5F5F7;
-  --color-accent-light: #cbb2ff;
-  --color-accent: #9b5de5;
-  --color-accent-dark: #7023c9;
-  --color-surface: #1A1A1A;
-  --color-border: #333333;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Montserrat", sans-serif;
 
-  --font-sans: "Inter", "Helvetica Neue", sans-serif;
-  --font-serif: "Garamond", "Playfair Display", serif;
+  --color-primary: #ffb400;
+  --color-on-primary: #111111;
+  --color-background: #111111;
+  --color-surface: #1a1a1a;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #a9a9a9;
+  --color-outline: #333333;
 
   --ease-expo-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-expo-in-out: cubic-bezier(0.87, 0, 0.13, 1);
@@ -20,40 +20,31 @@
 
 @layer base {
   html {
-    background-color: var(--color-background);
-    color: var(--color-foreground);
-    font-family: var(--font-sans);
+    @apply bg-background text-on-surface font-sans antialiased;
     cursor: none;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
-  html.lenis,
-  html.lenis body {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
-
-  .lenis.lenis-smooth [data-lenis-prevent] {
-    overscroll-behavior: contain;
+    scroll-behavior: smooth;
   }
 
   body {
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+    @apply overflow-x-hidden;
   }
 
   ::selection {
-    background-color: var(--color-accent);
-    color: var(--color-background);
+    @apply bg-primary text-on-primary;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold uppercase tracking-wider;
   }
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-outline {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+    color: transparent;
   }
-}
+  
+  .glass {
+    @apply bg-surface/80 backdrop-blur-md border border-white/5;
+  }
+}

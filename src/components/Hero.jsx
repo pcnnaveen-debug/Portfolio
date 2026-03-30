@@ -1,82 +1,195 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
+import { useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 
-export default function Hero() {
-    const headlineRef = useRef(null);
-    const subtexRef = useRef(null);
+const roles = ["Designer", "Strategist", "Creative", "Researcher", "Freelancer"];
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline();
+const Hero = () => {
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const canvasRef = useRef(null);
+  const mousePos = useRef({ x: 0, y: 0 });
 
-            const statsEl = subtexRef.current?.nextElementSibling;
+  // Typewriter effect logic
+  useEffect(() => {
+    const currentRole = roles[roleIndex];
+    const timeout = setTimeout(() => {
+      if (!isDeleting) {
+        setDisplayText(currentRole.substring(0, displayText.length + 1));
+        if (displayText.length + 1 === currentRole.length) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        }
+      } else {
+        setDisplayText(currentRole.substring(0, displayText.length - 1));
+        if (displayText.length === 0) {
+          setIsDeleting(false);
+          setRoleIndex((prev) => (prev + 1) % roles.length);
+        }
+      }
+    }, isDeleting ? 80 : 150);
 
-            tl.fromTo(headlineRef.current.children,
-                { y: 100, opacity: 0 },
-                { y: 0, opacity: 1, duration: 1.2, stagger: 0.1, ease: 'power4.out', delay: 0.2 }
-            )
-                .fromTo(subtexRef.current,
-                    { opacity: 0, y: 20 },
-                    { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
-                    "-=0.6"
-                );
+    return () => clearTimeout(timeout);
+  }, [displayText, isDeleting, roleIndex]);
 
-            if (statsEl) {
-                tl.fromTo(statsEl,
-                    { opacity: 0, x: -20 },
-                    { opacity: 1, x: 0, duration: 0.8, ease: 'power2.out' },
-                    "-=0.4"
-                );
-            }
+  // Advanced "Light Flies" (Fireflies) particle logic
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    const handleMouseMove = (e) => {
+      mousePos.current = { x: e.clientX, y: e.clientY };
+    };
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', handleMouseMove);
+    resize();
+
+    const particles = Array.from({ length: 80 }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      size: Math.random() * 3 + 0.5,
+      opacity: Math.random(),
+      flickerSpeed: 0.01 + Math.random() * 0.05,
+      angle: Math.random() * Math.PI * 2,
+    }));
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        // Natural firefly movement
+        p.angle += 0.02;
+        p.vx += Math.cos(p.angle) * 0.01;
+        p.vy += Math.sin(p.angle) * 0.01;
+        
+        // Mouse attraction
+        const dx = mousePos.current.x - p.x;
+        const dy = mousePos.current.y - p.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 200) {
+          p.vx += dx * 0.0001;
+          p.vy += dy * 0.0001;
+        }
+
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        // Boundaries with wrap-around instead of bounce for more "fly" feel
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        // Flicker effect
+        p.opacity = 0.2 + Math.abs(Math.sin(Date.now() * p.flickerSpeed) * 0.8);
+        
+        // Drawing glowing firefly
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = '#ffb400';
+        ctx.fillStyle = `rgba(255, 180, 0, ${p.opacity * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0; // Reset for performance
+
+        // Subtle connection lines (web)
+        particles.forEach(p2 => {
+          const dx2 = p.x - p2.x;
+          const dy2 = p.y - p2.y;
+          const dist2 = Math.sqrt(dx2*dx2 + dy2*dy2);
+          if (dist2 < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 180, 0, ${0.05 * (1 - dist2/120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
         });
+      });
 
-        return () => ctx.revert();
-    }, []);
+      animationFrameId = requestAnimationFrame(animate);
+    };
+    animate();
 
-    return (
-        <section className="relative h-screen w-full flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden">
-            {/* Abstract Background Element (placeholder for 3D/Canvas) */}
-            <div className="absolute top-1/2 right-10 md:right-32 -translate-y-1/2 w-72 h-72 md:w-96 md:h-96 bg-accent/20 blur-3xl rounded-full z-0 mix-blend-screen animate-pulse" />
+    return () => {
+      window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
-            <div className="relative z-10 max-w-5xl">
-                <h1
-                    className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.1] tracking-tight text-foreground font-semibold"
-                    ref={headlineRef}
-                >
-                    <div className="overflow-hidden"><span className="inline-block">Designing</span></div>
-                    <div className="overflow-hidden flex items-center gap-4">
-                        <span className="inline-block text-white/50 italic">Intuitive,</span>
-                        <span className="inline-block text-accent">Impactful</span>
-                    </div>
-                    <div className="overflow-hidden"><span className="inline-block">Experiences</span></div>
-                </h1>
+  const contactDetails = [
+    { label: 'Email:', value: 'hello@janemon.com' },
+    { label: 'Phone:', value: '+00 123 456 789' },
+    { label: 'Address:', value: 'New Winchester' },
+    { label: 'Nationality:', value: 'USA' },
+  ];
 
-                <p
-                    ref={subtexRef}
-                    className="mt-8 text-lg md:text-xl text-foreground/60 max-w-2xl font-sans"
-                >
-                    Hey, I’m Naveen 👋<br />
-                    UI/UX Designer based in Chennai, India. A multi-disciplinary designer focused on crafting immersive digital experiences and intuitive interfaces for forward-thinking brands.
-                </p>
+  return (
+    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-background">
+      {/* Particle Canvas */}
+      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-60" />
 
-                <div className="mt-8 flex gap-8 items-center border-l-2 border-accent/50 pl-6 z-10 opacity-0 relative">
-                    <div>
-                        <span className="block text-3xl font-serif text-white font-bold">2+</span>
-                        <span className="text-sm text-white/50 uppercase tracking-widest mt-1 block">Years of Experience</span>
-                    </div>
-                    <div>
-                        <span className="block text-3xl font-serif text-white font-bold">20+</span>
-                        <span className="text-sm text-white/50 uppercase tracking-widest mt-1 block">Successful Projects</span>
-                    </div>
-                </div>
+      {/* Massive Background Text - Sync with Current Role + Mouse Parallax */}
+      <motion.div 
+        className="absolute inset-0 flex items-center justify-center z-0 pointer-events-none select-none px-4"
+        animate={{
+          x: (mousePos.current.x - window.innerWidth / 2) * 0.02,
+          y: (mousePos.current.y - window.innerHeight / 2) * 0.02,
+        }}
+        transition={{ type: "smooth", duration: 0.5 }}
+      >
+        <h2 className="text-[12rem] md:text-[22rem] font-black text-outline uppercase tracking-[0.05em] opacity-30 break-all leading-none text-center transform transition-transform duration-1000">
+          {roles[roleIndex]}
+        </h2>
+      </motion.div>
 
-                <div className="mt-12 flex gap-6 relative z-20">
-                    <a href="https://drive.google.com/file/d/1k00fZvp9Sbr_us6Kh71NNoW29WZhLPYM/view?usp=sharing" target="_blank" rel="noopener noreferrer" className="group flex items-center gap-2 hover-target text-sm uppercase tracking-widest font-semibold px-8 py-4 border border-white/20 hover:border-accent hover:bg-accent/10 transition-colors duration-300 rounded-full">
-                        View Resume
-                        <span className="group-hover:translate-x-1 transition-transform">→</span>
-                    </a>
-                </div>
+      {/* Hero Content */}
+      <div className="relative z-10 text-center lg:text-left w-full max-w-7xl px-6 lg:px-24">
+        <motion.h4 
+          className="text-on-surface-variant text-base md:text-lg font-medium tracking-[0.1em] mb-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          — I Am Jannatul Ferdousy
+        </motion.h4>
+        
+        <motion.h1 
+          className="text-6xl md:text-9xl font-black text-on-surface mb-16 h-[1.1em] flex items-center lg:justify-start justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          {displayText}
+          <span className="w-1.5 h-[0.9em] bg-primary ml-4 animate-pulse shadow-[0_0_20px_rgba(255,180,0,0.8)]" />
+        </motion.h1>
+
+        {/* Contact Details Grid */}
+        <motion.div 
+          className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-16 pt-8 border-t border-white/5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          {contactDetails.map((detail, i) => (
+            <div key={detail.label} className="flex flex-col gap-2">
+              <span className="text-on-surface-variant text-xs font-bold uppercase tracking-widest">{detail.label}</span>
+              <span className="text-on-surface text-base md:text-lg font-bold truncate transition-colors hover:text-primary cursor-default">{detail.value}</span>
             </div>
-        </section>
-    );
-}
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default Hero;
